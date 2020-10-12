@@ -27,7 +27,7 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 ###############################################################################
 import re
 def find_words(text, substr):
-    pattern = r'\b\w?' + substr + r'\w?\b'
+    pattern = r'\b\w*' + substr + r'\w*\b'
     m = re.findall(pattern, text)
     return set(m)
 
@@ -39,7 +39,7 @@ def find_words(text, substr):
 # {'zibala', 'zibel', 'zibelko'}
 ###############################################################################
 def find_prefix(text, substr):
-    pattern = r'\b' + substr + r'\w?\b'
+    pattern = r'\b' + substr + r'\w*\b'
     m = re.findall(pattern, text)
     return set(m)
 
@@ -51,7 +51,7 @@ def find_prefix(text, substr):
 # {'zibala', 'razveselila', 'prestrašila', 'šivala', 'opazila', 'tla'}
 ###############################################################################
 def find_suffix(text, substr):
-    pattern = r'\b\w?' + substr + r'\b'
+    pattern = r'\b\w*' + substr + r'\b'
     m = re.findall(pattern, text)
     return set(m)
 
