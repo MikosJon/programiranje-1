@@ -11,7 +11,7 @@ Naravniku, je šivala gospodinja v senci pod drevesom in zibala otroka. Naenkrat
 prilomasti - pa prej ni ničesar opazila - medved in ji moli taco, v kateri je
 tičal velik, debel trn. Žena se je prestrašila, a medved le milo in pohlevno
 godrnja. Zato se žena ojunači in mu izdere trn iz tace. Mrcina kosmata pa zvrne
-zibel, jo pobaše in oddide. Čez nekaj časa pa ji zopet prinese zibel, a zvhano
+zibel, jo pobaše in odide. Čez nekaj časa pa ji zopet prinese zibel, a zvhano
 napolnjeno s sladkimi hruškami . Postavil jo je na tla pred začudeno mater in
 odracal nazaj v goščavo. "Poglej no", se je razveselila mati, "kakšen hvaležen
 medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
