@@ -11,7 +11,7 @@ Naravniku, je šivala gospodinja v senci pod drevesom in zibala otroka. Naenkrat
 prilomasti - pa prej ni ničesar opazila - medved in ji moli taco, v kateri je
 tičal velik, debel trn. Žena se je prestrašila, a medved le milo in pohlevno
 godrnja. Zato se žena ojunači in mu izdere trn iz tace. Mrcina kosmata pa zvrne
-zibel, jo pobaše in oddide. Čez nekaj časa pa ji zopet prinese zibel, a zvhano
+zibel, jo pobaše in odide. Čez nekaj časa pa ji zopet prinese zibel, a zvhano
 napolnjeno s sladkimi hruškami . Postavil jo je na tla pred začudeno mater in
 odracal nazaj v goščavo. "Poglej no", se je razveselila mati, "kakšen hvaležen
 medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
@@ -25,7 +25,11 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> find_words(test_text, 'de')
 # {'izdere', 'debel', 'oddide', 'začudeno'}
 ###############################################################################
-
+import re
+def find_words(text, substr):
+    pattern = r'\b\w*' + substr + r'\w*\b'
+    m = re.findall(pattern, text)
+    return set(m)
 
 ###############################################################################
 # 2) Sestavite funkcijo [find_prefix], ki vrne množico vseh besed, ki se
@@ -34,7 +38,10 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> find_prefix(test_text, 'zi')
 # {'zibala', 'zibel', 'zibelko'}
 ###############################################################################
-
+def find_prefix(text, substr):
+    pattern = r'\b' + substr + r'\w*\b'
+    m = re.findall(pattern, text)
+    return set(m)
 
 ###############################################################################
 # 3) Sestavite funkcijo [find_suffix], ki vrne množico vseh besed, ki se
@@ -43,7 +50,10 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> find_suffix(test_text, 'la')
 # {'zibala', 'razveselila', 'prestrašila', 'šivala', 'opazila', 'tla'}
 ###############################################################################
-
+def find_suffix(text, substr):
+    pattern = r'\b\w*' + substr + r'\b'
+    m = re.findall(pattern, text)
+    return set(m)
 
 ###############################################################################
 # 4) Sestavite funkcijo [double_letters], ki sprejme niz in vrne množico vseh
@@ -52,3 +62,7 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> double_letters('A volunteer is worth twenty pressed men.')
 # {'volunteer', 'pressed'}
 ###############################################################################
+def double_letters(text):
+    pattern = r'(\b\w*(?P<letter>[a-zA-Z])(?P=letter)\w*\b)'
+    matches = [m[0] for m in re.findall(pattern, text)]
+    return set(matches)
