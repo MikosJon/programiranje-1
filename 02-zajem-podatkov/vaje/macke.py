@@ -94,7 +94,11 @@ def get_dict_from_ad_block(block):
     r_opis_url = r'href="/(?P<url>.*?)"'
 
     naslov = re.search(r_naslov, block).group('naslov')
-    cena = re.search(r_cena, block, flags=re.DOTALL).group('cena')
+    cena = None
+    try:
+        cena = re.search(r_cena, block, flags=re.DOTALL).group('cena')
+    except:
+        pass
     opis_url = re.search(r_opis_url, block).group('url')
 
     new_url = cats_frontpage_url + opis_url
