@@ -8,7 +8,7 @@
  - : int = 4
 [*----------------------------------------------------------------------------*)
 
-let square x = x*x
+let square x = x * x
 
 
 (*----------------------------------------------------------------------------*]
@@ -31,7 +31,7 @@ let middle_of_triple (_, y, _) = y
 
 let starting_element sez = match sez with
   | [] -> failwith "Podan je bil prazen seznam."
-  | x::_ -> x
+  | x :: _ -> x
 
 
 (*----------------------------------------------------------------------------*]
@@ -44,7 +44,7 @@ let starting_element sez = match sez with
 
 let rec multiply sez = match sez with
   | [] -> 1
-  | x::xs -> x*multiply xs
+  | x :: xs -> x * multiply xs
 
 
 (*----------------------------------------------------------------------------*]
@@ -64,7 +64,7 @@ let rec multiply sez = match sez with
 
 let rec sum_int_pairs sez = match sez with
   | [] -> []
-  | (x, y)::pairs -> (x+y)::sum_int_pairs pairs
+  | (x, y) :: pairs -> (x + y) :: sum_int_pairs pairs
 
 
 (*----------------------------------------------------------------------------*]
@@ -78,7 +78,7 @@ let rec sum_int_pairs sez = match sez with
 
 let rec get k sez = match sez with
   | [] -> failwith "Prekratek seznam"
-  | x::xs -> if k<=0 then x else get (k-1) xs
+  | x :: xs -> if k <= 0 then x else get (k - 1) xs
 
 
 (*----------------------------------------------------------------------------*]
@@ -90,7 +90,7 @@ let rec get k sez = match sez with
 
 let rec double sez = match sez with
   | [] -> []
-  | x::xs -> x::x::double xs
+  | x :: xs -> x :: x :: double xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [insert x k list] na [k]-to mesto seznama [list] vrine element [x].
@@ -104,7 +104,7 @@ let rec double sez = match sez with
 
 let rec insert x k sez = match sez with
   | [] -> [x]
-  | y::ys -> if k<=0 then x::y::ys else y::insert x (k-1) ys
+  | y :: ys -> if k <= 0 then x :: y :: ys else y :: insert x (k - 1) ys
 
 
 (*----------------------------------------------------------------------------*]
@@ -120,9 +120,9 @@ let rec insert x k sez = match sez with
 
 let rec divide k sez = match (k, sez) with
   | (0, sez') -> ([], sez')
-  | (k', x::xs) -> (
-    let (prvi, drugi) = divide (k'-1) xs in
-    (x::prvi, drugi)
+  | (k', x :: xs) -> (
+    let (prvi, drugi) = divide (k' - 1) xs in
+    (x :: prvi, drugi)
   )
   | (_, []) -> ([], [])
 
@@ -137,7 +137,7 @@ let rec divide k sez = match (k, sez) with
 
 let rec rotate n sez = match n, sez with
   | 0, xs -> xs
-  | n', x::xs -> rotate (n'-1) (xs @ [x])
+  | n', x :: xs -> rotate (n' - 1) (xs @ [x])
   | _, [] -> failwith "Prevelik n"
 
 (* Uporabi prejsno funkcijo*)
@@ -154,7 +154,7 @@ let rec rotate' n sez =
 
 let rec remove x sez = match sez with
   | [] -> []
-  | y::ys -> if x=y then remove x ys else y::remove x ys
+  | y :: ys -> if x = y then remove x ys else y :: remove x ys
 
 
 (*----------------------------------------------------------------------------*]
@@ -170,7 +170,7 @@ let rec remove x sez = match sez with
 let rec is_palindrome sez =
   let rec flip list = match list with
     | [] -> []
-    | x::xs -> (flip xs) @ [x]
+    | x :: xs -> (flip xs) @ [x]
   in sez = flip sez
 
 
@@ -186,7 +186,7 @@ let rec is_palindrome sez =
 let rec max_on_components left right = match left, right with
   | [], _ -> []
   | _, [] -> []
-  | x::xs, y::ys -> (if x>y then x else y)::max_on_components xs ys
+  | x :: xs, y :: ys -> (if x > y then x else y) :: max_on_components xs ys
 
 
 (*----------------------------------------------------------------------------*]
@@ -203,8 +203,9 @@ let rec second_largest sez =
   let rec find_max sez = match sez with
     | [] -> failwith "Prazen seznam nima maksimuma."
     | [x] -> x
-    | x::xs ->
-      let max_rest = find_max xs in
-        if x>max_rest then x else max_rest
-  in let sez' = remove (find_max sez) sez in
-    find_max sez'
+    | x :: xs ->
+      let max_rest = find_max sez in
+        if x > max_rest then x else max_rest
+  in
+    let sez' = remove (find_max sez) sez in
+      find_max sez'
