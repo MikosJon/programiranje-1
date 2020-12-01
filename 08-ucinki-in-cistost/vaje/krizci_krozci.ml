@@ -125,9 +125,9 @@ let winner_of_triple triple : player option = match triple with
 
 let rec winner_of_list triples : player option = match triples with
   | [] -> None
-  | tri :: tris -> match winner_of_triple tri with
+  | trp :: trps -> match winner_of_triple trp with
     | Some player -> Some player
-    | None -> winner_of_list tris
+    | None -> winner_of_list trps
 
 let winner_of_grid grid =
   (* Pripravimo si vse trojice, kjer bi lahko dosegli tri v vrsto. *)
@@ -148,7 +148,7 @@ let winner_of_grid grid =
  konča bodisi z zmago nekega igralca bodisi z remijem.
 [*----------------------------------------------------------------------------*)
 
-type result = XWin | OWin | Draw  (* DOPOLNI ME *)
+type result = Draw | Winner of player
 
 (*----------------------------------------------------------------------------*]
  Stanje igre predstavimo z vsotnim tipom [state]. Ali je na potezi eden od
@@ -197,8 +197,8 @@ let place_token player grid (row_i, col_i) : state =
       (* Dobili smo zmagovalca, torej vrnemo [GameOver] z novo mrežo in
       zmagovalcem *)
       match player with
-        | X -> GameOver {result = XWin; final_grid = updated_grid}
-        | O -> GameOver {result = OWin; final_grid = updated_grid}
+        | X -> GameOver {result = Winner X; final_grid = updated_grid}
+        | O -> GameOver {result = Winner O; final_grid = updated_grid}
 
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
@@ -251,7 +251,7 @@ let show_state = function
   | GameOver {result; final_grid} ->
       let winner_message = match result with
         | Draw -> "Remi!!"
-        | _ -> "Zmagal je " ^ (if result = XWin then show_player X else show_player O) ^ "!!"
+        | Winner player -> "Zmagal je " ^ (show_player player) ^ "!!"
       in
       winner_message ^ "\n" ^ show_grid final_grid ^ "\n"
 
