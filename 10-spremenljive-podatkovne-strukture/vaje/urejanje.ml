@@ -9,6 +9,9 @@
  val l : int list = [0; 1; 0; 4; 0; 9; 1; 2; 5; 4]
 [*----------------------------------------------------------------------------*)
 
+let rec randlist len max = match len with
+  | 0 -> []
+  | x -> Random.int max :: randlist (x - 1) max
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
  Sedaj lahko s pomočjo [randlist] primerjamo našo urejevalno funkcijo (imenovana
@@ -25,7 +28,7 @@
 
 (*----------------------------------------------------------------------------*]
  Funkcija [insert y xs] vstavi [y] v že urejen seznam [xs] in vrne urejen
- seznam. 
+ seznam.
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  # insert 9 [0; 2];;
  - : int list = [0; 2; 9]
@@ -35,13 +38,20 @@
  - : int list = [7]
 [*----------------------------------------------------------------------------*)
 
+let rec insert y = function
+  | [] -> [y]
+  | x :: xs -> if x > y then y :: x :: xs else x :: insert y xs
 
 (*----------------------------------------------------------------------------*]
  Prazen seznam je že urejen. Funkcija [insert_sort] uredi seznam tako da
  zaporedoma vstavlja vse elemente seznama v prazen seznam.
 [*----------------------------------------------------------------------------*)
 
+let rec insert_sort list =
+  List.fold_left (fun acc y -> insert y acc) [] list
 
+let test = (randlist 100 100)
+let result_insert = (insert_sort test = List.sort compare test)
 
 (*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*]
  Urejanje z Izbiranjem
@@ -50,15 +60,23 @@
 (*----------------------------------------------------------------------------*]
  Funkcija [min_and_rest list] vrne par [Some (z, list')] tako da je [z]
  najmanjši element v [list] in seznam [list'] enak [list] z odstranjeno prvo
- pojavitvijo elementa [z]. V primeru praznega seznama vrne [None]. 
+ pojavitvijo elementa [z]. V primeru praznega seznama vrne [None].
 [*----------------------------------------------------------------------------*)
 
+let min_and_rest list =
+  let rec remove_first x acc = function
+    | [] -> List.rev acc
+    | y :: ys -> if x = y then (List.rev acc) @ ys else remove_first x (y :: acc) ys
+  in
+  match list with
+    | [] -> None
+    | x :: xs -> let m = List.fold_left min x xs in Some (m, remove_first m [] list)
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
  Pri urejanju z izbiranjem na vsakem koraku ločimo dva podseznama, kjer je prvi
  že urejen, drugi pa vsebuje vse elemente, ki jih je še potrebno urediti. Nato
  zaporedoma prenašamo najmanjši element neurejenega podseznama v urejen
- podseznam, dokler ne uredimo vseh. 
+ podseznam, dokler ne uredimo vseh.
 
  Če pričnemo z praznim urejenim podseznamom, vemo, da so na vsakem koraku vsi
  elementi neurejenega podseznama večji ali enaki elementom urejenega podseznama,
@@ -72,14 +90,21 @@
  Namig: Uporabi [min_and_rest] iz prejšnje naloge.
 [*----------------------------------------------------------------------------*)
 
+let selection_sort list =
+  let rec aux sorted li = match min_and_rest li with
+    | None -> List.rev sorted
+    | Some (m, li') -> aux (m :: sorted) li'
+  in
+  aux [] list
 
+let result_selection = (selection_sort test = List.sort compare test)
 
 (*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*]
  Urejanje z Izbiranjem na Tabelah
 [*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*)
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
- Pri delu z tabelami (array) namesto seznami, lahko urejanje z izbiranjem 
+ Pri delu z tabelami (array) namesto seznami, lahko urejanje z izbiranjem
  naredimo "na mestu", t.j. brez uporabe vmesnih kopij (delov) vhoda. Kot prej
  tabelo ločujemo na že urejen del in še neurejen del, le da tokrat vse elemente
  hranimo v vhodni tabeli, mejo med deloma pa hranimo v spremenljivki
@@ -101,6 +126,10 @@
  - : int array = [|0; 4; 2; 3; 1|]
 [*----------------------------------------------------------------------------*)
 
+let swap a i j =
+  let temp = a.(i) in
+  a.(i) <- a.(j);
+  a.(j) <- temp
 
 (*----------------------------------------------------------------------------*]
  Funkcija [index_min a lower upper] poišče indeks najmanjšega elementa tabele
@@ -109,11 +138,25 @@
  index_min [|0; 2; 9; 3; 6|] 2 4 = 4
 [*----------------------------------------------------------------------------*)
 
+let index_min a lower upper =
+  let min_pair = ref (a.(lower), lower) in
+  for idx = lower to upper do
+    let v = a.(idx) in
+    if v < fst !min_pair then min_pair := (v, idx) else ()
+  done;
+  snd !min_pair
+
 
 (*----------------------------------------------------------------------------*]
- Funkcija [selection_sort_array] implementira urejanje z izbiranjem na mestu. 
+ Funkcija [selection_sort_array] implementira urejanje z izbiranjem na mestu.
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  Namig: Za testiranje uporabi funkciji [Array.of_list] in [Array.to_list]
  skupaj z [randlist].
 [*----------------------------------------------------------------------------*)
 
+let selection_sort_array array =
+  let n = Array.length array in
+  for boundary_sorted = 0 to n - 1 do
+    let m_idx = index_min array boundary_sorted (n - 1) in
+    swap array boundary_sorted m_idx
+  done
