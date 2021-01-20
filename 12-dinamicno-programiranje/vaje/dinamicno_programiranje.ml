@@ -16,10 +16,24 @@
  - : int = 13
 [*----------------------------------------------------------------------------*)
 
-let test_matrix = 
+let test_matrix =
   [| [| 1 ; 2 ; 0 |];
      [| 2 ; 4 ; 5 |];
      [| 7 ; 0 ; 1 |] |]
+
+let max_cheese matrix =
+   let h = Array.length matrix
+   and w = Array.length matrix.(0) in
+   let rec aux (row, col) =
+      if row > (h - 1) || col > (w - 1) then 0
+      else
+         let right = aux (row, col + 1)
+         and down = aux (row + 1, col)
+         in
+         matrix.(row).(col) + max right down
+   in
+   aux (0, 0)
+
 
 (*----------------------------------------------------------------------------*]
  Poleg količine sira, ki jo miška lahko poje, jo zanima tudi točna pot, ki naj
@@ -30,7 +44,7 @@ let test_matrix =
  Pripravite tudi funkcijo [convert_path], ki pot pretvori v seznam tež sirčkov
  na poti.
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- # optimal_path_bottom test_matrix;;
+ # optimal_path test_matrix;;
  - : mouse_direction list = [Right; Down; Down; Right; Down]
  # optimal_path test_matrix |> convert_path test_matrix;;
  - : int list = [1; 2; 4; 5; 1]
@@ -38,6 +52,30 @@ let test_matrix =
 
 type mouse_direction = Down | Right
 
+let optimal_path matrix =
+   let h = Array.length matrix
+   and w = Array.length matrix.(0) in
+   let rec aux (row, col) =
+      if row > (h - 1) || col > (w - 1) then (0, [])
+      else if (row, col) = (h - 1, w - 1) then (matrix.(row).(col), [])
+      else
+         let right, path_right = aux (row, col + 1)
+         and down, path_down = aux (row + 1, col)
+         in
+         if right > down then
+            matrix.(row).(col) + right, Right :: path_right
+         else
+            matrix.(row).(col) + down , Down :: path_down
+   in
+   snd (aux (0, 0))
+
+let convert_path matrix path =
+   let rec aux (row, col) acc = function
+     | [] -> List.rev (matrix.(row).(col) :: acc)
+     | Down :: xs -> aux (row + 1, col) (matrix.(row).(col) :: acc) xs
+     | Right :: xs -> aux (row, col + 1) (matrix.(row).(col) :: acc) xs
+  in
+  aux (0, 0) [] path
 
 (*----------------------------------------------------------------------------*]
  Rešujemo problem sestavljanja alternirajoče obarvanih stolpov. Imamo štiri
@@ -55,12 +93,19 @@ type mouse_direction = Down | Right
  - : int = 35
 [*----------------------------------------------------------------------------*)
 
+let alternating_towers n =
+   let red height =
+   if n - height = 0 then 0
+   else if n - height = 1 then 1 + blue (height - 1)
+   else 1 + blue (height - 1) + 1 + blue (height - 2)
+   and blue height =
+     if
 
 
 (*----------------------------------------------------------------------------*]
  Izračunali smo število stolpov, a naše vrle gradbince sedaj zanima točna
  konfiguracija. Da ne pride do napak pri sestavljanju, bomo stolpe predstavili
- kar kot vsotne tipe. 
+ kar kot vsotne tipe.
 
  Stolp posamezne barve so temelji (Bottom), ali pa kot glava bloka pripadajoče
  barve in preostanek, ki je stolp nasprotne barve.
@@ -70,7 +115,7 @@ type mouse_direction = Down | Right
  brez) prekoračitve sklada deluje vsaj do višine 20.
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  # enumerate_towers 4;;
- - : tower list = 
+ - : tower list =
     [Red (TopRed (Red2, TopBlue (Blue2, RedBottom)));
      Red (TopRed (Red1, TopBlue (Blue3, RedBottom)));
      Red (TopRed (Red1, TopBlue (Blue2, TopRed (Red1, BlueBottom))));
