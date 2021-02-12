@@ -26,6 +26,14 @@
 def solve(li):
     memo = [0] * len(li)
     for i in range(len(li) - 2, -1, -1):
+        # memo[i] je najboljse, ce je spodnji vrh na li[i]
+        # imamo 2 moznosti:
+        #   -  li[i + 1] je najvisji od vseh desno
+        #   -  li[i + 1] ni najvisji od vseh desno
+        #
+        # V prvem primeru je memo[i + 1] <= 0, torej dobimo samo koliko je li[i + 1] vecji od li[i]
+        # Sicer pa je sedaj spodnji vrh na li[i] namesto li[i + 1], torej smo izboljsali
+        # za toliko, kot je li[i] nizji od li[i + 1]
         memo[i] = max(memo[i + 1], 0) + (li[i + 1] - li[i])
     return max(memo)
 
